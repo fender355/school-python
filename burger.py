@@ -21,28 +21,28 @@ tambahan=input("Sila masukkan pilihan inti tambahan anda (A/B/C/AB/AC/BC/ABC/D) 
 if tambahan.upper() not in ("D"):
 
     if tambahan.upper() in ("A"):
-        harga=harga+1.0
+        harga+=1.0
 
     elif tambahan.upper() in ("B"):
-        harga=harga+2.0
+        harga+=2.0
 
     elif tambahan.upper() in ("C"):
-        harga=harga+1.5
+        harga+=1.5
 
     elif tambahan.upper() in ("AB"):
-        harga=harga+3.0
+        harga+=3.0
     
     elif tambahan.upper() in ("BC"):
-        harga=harga+3.5
+        harga+=3.5
     
     elif tambahan.upper() in ("AC"):
-        harga=harga+2.5
+        harga+=2.5
     
     elif tambahan.upper() in ("ABC"):
-        harga=harga+4.5
+        harga+=4.5
 
     else:
-        harga=harga+6000
+        harga+=6000
 else:
     harga=harga
 
@@ -51,10 +51,10 @@ if makan.upper() in ("A"):
     harga=harga
 
 elif makan.upper() in ("B"): 
-    harga=harga+0.2
+    harga+=0.2
 
 else: 
-    harga=harga+1000
+    harga+=1000
 
 
 if harga>=1000:
