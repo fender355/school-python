@@ -1,4 +1,5 @@
-print('''Selamat Datang ke Kedai Bunga Tangan! 
+print('''
+Selamat Datang ke Kedai Bunga Tangan! 
 
 A: Ros 
 B: Tulip 
