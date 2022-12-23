@@ -12,6 +12,7 @@ while masih == True:
     if guna==1:
         masih
     else:
+        masih = False
         print("Terima kasih kerana telah menggunakan atur cara ini. ")
         break
     
