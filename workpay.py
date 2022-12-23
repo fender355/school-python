@@ -12,7 +12,8 @@ while masih == True:
     if guna==1:
         masih
     else:
+        print("Terima kasih kerana telah menggunakan atur cara ini. ")
         break
     
-print("Terima kasih kerana telah menggunakan atur cara ini. ")
+
     
