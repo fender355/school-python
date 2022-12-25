@@ -1,6 +1,6 @@
 masih = True
 
-while masih == True: 
+while masih: 
     jam = float(input("\nNyatakan bilangan jam anda bekerja lebih masa: "))
     
     bayar = 6.5 * jam
@@ -12,7 +12,7 @@ while masih == True:
     if guna == 1:
         masih
     else:
-        masih = False
+        not masih 
         print("\nTerima kasih kerana telah menggunakan atur cara ini. ")
         break
     
