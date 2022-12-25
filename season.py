@@ -56,7 +56,7 @@ elif bulan in (3,6,9,12):
         if hari <= 21 and hari >= 1 :
             print("\nHaribulan yang anda masukkan adalah musim panas. ")
 
-        elif hari >=22 and hari <= 30 :
+        elif hari >= 22 and hari <= 30 :
             print("\nHaribulan yang anda masukkan adalah musim luruh. ")
 
         else: 
