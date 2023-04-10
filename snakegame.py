@@ -6,7 +6,7 @@ speed=15
 #windows size
 
 frame_size_x=1920
-frame_size_y=1007
+frame_size_y=1080
 
 check_errors=pygame.init()
 
