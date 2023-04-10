@@ -1,90 +1,114 @@
-import pygame
+import curses
+import time
 import random
+import pygame
 
-# initialize pygame
-pygame.init()
+# set the dimensions of the screen
+width = 800
+height = 600
 
-# create screen
-screen_width = 800
-screen_height = 600
-screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("Snake Game")
+# initialize the screen
+screen = curses.initscr()
+curses.curs_set(0)
+board_size = screen.getmaxyx()
 
-# set colors
-green = (0, 255, 0)
-red = (255, 0, 0)
+# generate the initial snake position and direction
+snake_pos = [(board_size[0] // 2, board_size[1] // 2)]
+direction = (0, 1)
 
-# set font for displaying score
-font = pygame.font.Font(None, 36)
+# generate the initial food position
+def generate_food_position(snake_pos):
+    food_pos = None
+    while food_pos is None:
+        # generate a random position on the board
+        food_pos = (random.randint(0, board_size[0]-1), random.randint(0, board_size[1]-1))
+        # check if the food position is not on the snake
+        if food_pos in snake_pos:
+            food_pos = None
+    return food_pos
 
-# set initial position of the snake
-snake_block_size = 10
-snake_speed = 15
-x_change = 0
-y_change = 0
-snake_list = []
-snake_length = 1
+food_pos = generate_food_position(snake_pos)
 
-# set initial position of food
-food_block_size = 10
-food_x = round(random.randrange(0, screen_width - food_block_size) / 10.0) * 10.0
-food_y = round(random.randrange(0, screen_height - food_block_size) / 10.0) * 10.0
-
-# set initial score
+# initialize the score
 score = 0
 
-# function to display score on the screen
-def display_score(score):
-    score_text = font.render("Score: " + str(score), True, green)
-    screen.blit(score_text, [10, 10])
+# initialize the change_to variable
+change_to = None
 
-# game loop
+# initialize the game_over variable
 game_over = False
+
+# main game loop
 while not game_over:
-    # handle events
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            game_over = True
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                x_change = -snake_block_size
-                y_change = 0
-            elif event.key == pygame.K_RIGHT:
-                x_change = snake_block_size
-                y_change = 0
-            elif event.key == pygame.K_UP:
-                x_change = 0
-                y_change = -snake_block_size
-            elif event.key == pygame.K_DOWN:
-                x_change = 0
-                y_change = snake_block_size
+    # get the user input
+    event = screen.getch()
+    if event == curses.KEY_UP:
+        change_to = (-1, 0)
+    elif event == curses.KEY_DOWN:
+        change_to = (1, 0)
+    elif event == curses.KEY_LEFT:
+        change_to = (0, -1)
+    elif event == curses.KEY_RIGHT:
+        change_to = (0, 1)
+        
+    # check if the snake ate the food
+    if snake_pos[0] == food_pos:
+        # if the snake ate the food, add a new head and generate a new food position
+        snake_pos.insert(0, (snake_pos[0][0] + direction[0], snake_pos[0][1] + direction[1]))
+        
+        # update the score
+        score += 1
+        
+        # generate a new food position
+        food_pos = generate_food_position(snake_pos)
+        
+    else:
+        # if the snake did not eat the food, remove the tail
+        snake_pos.pop()
+        
+    # update the snake direction based on the user input
+    if change_to:
+        direction = change_to
+        change_to = None
     
-    # move the snake
-    snake_head = []
-    snake_head.append(round(snake_block_size + x_change, 1))
-    snake_head.append(round(snake_block_size + y_change, 1))
-    snake_list.append(snake_head)
-    if len(snake_list) > snake_length:
-        del snake_list[0]
+    # move the snake by adding a new head in the direction of the current direction
+    new_head = (snake_pos[0][0] + direction[0], snake_pos[0][1] + direction[1])
+    snake_pos.insert(0, new_head)
     
-    # check if snake hit the boundary or itself
-    for block in snake_list[:-1]:
-        if block == snake_head:
-            game_over = True
-    if snake_head[0] < 0 or snake_head[0] >= screen_width or snake_head[1] < 0 or snake_head[1] >= screen_height:
+    # check if the snake collided with the boundary or with itself
+    if (new_head[0] < 0 or new_head[0] >= board_size[0] or
+        new_head[1] < 0 or new_head[1] >= board_size[1] or
+        new_head in snake_pos[1:]):
         game_over = True
     
-    # check if snake eats the food
-    if snake_head[0] == food_x and snake_head[1] == food_y:
-        food_x = round(random.randrange(0, screen_width - food_block_size) / 10.0) * 10.0
-        food_y = round(random.randrange(0, screen_height - food_block_size) / 10.0) * 10.0
-        snake_length += 1
-        score += 10
+    # clear the screen and draw the snake and food
+    screen.clear()
+    screen.addstr(food_pos[0], food_pos[1], '🍎')
+    for pos in snake_pos:
+        screen.addstr(pos[0], pos[1], '🟢')
     
-    # draw the snake and the food on the screen
-    screen.fill((0, 0, 0))
-    for block in snake_list:
-        pygame.draw.rect(screen, green, [block[0], block[1], snake_block_size, snake_block_size])
-    pygame.draw.rect(screen, red, [food_x, food_y, food_block_size, food_block_size])
-    display_score(score)
+    # display the score
+    screen.addstr(board_size[0], 0, f'Score: {score}')
+    
+    # refresh the screen
+    screen.refresh()
+    
+    # wait for a short amount of time before moving the snake again
+    time.sleep(0.1)
+    
+# game over, display the final score
+    screen.fill(0,0,0)
+    font = pygame.font.SysFont('Arial', 30)
+    text = font.render('Game Over! Your score is: ' + str(score), True, 255,255,255)
+    text_rect = text.get_rect()
+    text_rect.center = (width // 2, height // 2)
+    screen.blit(text, text_rect)
     pygame.display.update()
+ 
+    # wait for 3 seconds before quitting the game
+    pygame.time.wait(3000)
+ 
+    # quit pygame and the program
+    pygame.quit()
+    quit()
+
