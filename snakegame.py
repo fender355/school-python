@@ -1,4 +1,3 @@
-from winreg import DisableReflectionKey
 import pygame, sys, time, random
 
 speed=10
