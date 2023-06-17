@@ -5,8 +5,8 @@ def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def pomodoro_timer(total_pomodoros):
-    study_time = 1 * 2  # 1 minutes
-    short_break_time = 1 * 2  # 5 minutes
+    study_time = 30 * 60  # 30 minutes
+    short_break_time = 5 * 60  # 5 minutes
     pomodoro_count = 0
 
     while pomodoro_count < total_pomodoros:
